@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import he from 'he'
 
 interface Quiz {
   question: string;
@@ -29,9 +30,11 @@ const Quizs: React.FC<QuizProps> = ({ handleEnd }) => {
         const { results } = response.data;
         console.log(results);
         const formattedQuizs = results.map((quiz: any) => ({
-          question: quiz.question,
-          correctAnswer: quiz.correct_answer,
-          incorrectAnswer: quiz.incorrect_answers,
+          question: he.decode(quiz.question),
+          correctAnswer: he.decode(quiz.correct_answer),
+          incorrectAnswer: quiz.incorrect_answers.map((answer: string) =>
+            he.decode(answer)
+          ),
         }));
 
         setQuizs(formattedQuizs);
